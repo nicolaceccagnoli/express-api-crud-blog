@@ -13,6 +13,11 @@ const { path } = require('./utils.js');
 // Middleware per i file statici
 app.use(express.static('./public'));
 
+// application/json
+app.use(express.json());
+// application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
 // Definisco le mie rotte
 app.use('/posts', postsRouter);
 

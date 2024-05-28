@@ -134,8 +134,10 @@ const create = (req, res) => {
     };
 
     // Aggiorno i posts
-    updatePosts([...posts, newPost]);
-
+    const newPosts = [...posts, newPost]; 
+    updatePosts(newPosts);
+    posts = newPosts;
+    
     res.format({
         html: () => {
             // Se il nuovo post è stato creato

@@ -20,11 +20,9 @@ const deletePublicFile = (fileName) => {
 
 // Creo una funzione per aggiornare i Posts
 const updatePosts = (newPosts) => {
-    const filePath = path.join(__dirname, '../db/posts.json');
+    const filePath = path.join(__dirname, './db/posts.json');
     // Scrivo i nuovi post e converto l'oggetto in una stringa JSON
     fs.writeFileSync(filePath, JSON.stringify(newPosts));
-    // Aggiorno i posts con i nuovi Posts
-    posts = newPosts;
 }
 
 // Esporto i moduli
