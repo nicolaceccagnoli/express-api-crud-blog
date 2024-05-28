@@ -136,7 +136,29 @@ const create = (req, res) => {
     // Aggiorno i posts
     updatePosts([...posts, newPost]);
 
-    res.send(`Nuovo post ${title} creato con slug ${slug}`);
+    res.format({
+        html: () => {
+            // Se il nuovo post è stato creato
+            if (newPost) {
+                res.redirect(`/posts/${slug}`);
+            } else {
+                res.status(404).send(`<h1>Post non trovato</h1>`)
+            }
+        },
+        json: () => {
+            if (newPost) {
+                res.json({
+                    ...newPost,
+                    image_url: `http://${req.headers.host}/${newPost.image}`
+                })
+            } else {
+                res.status(404).json({
+                    error: 'Not found',
+                    description: `Non esiste un post con slug: ${slug}`
+                })
+            }
+        }
+    })
 };
 
 // Definisco la rotta per il download
