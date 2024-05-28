@@ -1,5 +1,9 @@
 let posts = require('../db/posts.json');
-const { path } = require('../utils');
+const { path, 
+        createSlug,
+        deletePublicFile, 
+        updatePosts 
+    } = require('../utils');
 
 
 // Funzione per l'index
@@ -104,18 +108,35 @@ const show = (req, res) => {
 
 // Funzione per il create
 const create = (req, res) => {
-    res.format({
-        html: () => {
-            res.send(`
-                <main>
-                    <h1> Creazione nuovo Post </h1>
-                </main>
-            `);
-        },
-        default: () => {
-            res.status(406).send('Richiesta non accettata')
-        }
-    });
+    // Prendo dal body della request le proprietà utili a comporre il nuovo Post
+    const { title, content, tags } = req.body;
+    // Se il body della request non ha questi requisiti
+    if(!title || title.replaceAll('/', '').trim().length == 0 || !content || !tags) {
+        // Se esiste un file associato alla richiesta lo elimino
+        req.file?.filename && deletePublicFile(req.file.filename);
+        return res.status(400).send('Alcuni dati non sono stati inseriti');
+    } // Altrimenti se req.file non esiste o il suo mimetype non è image
+    else if (!req.file || !req.file.mimetype.includes('image')) {
+        req.file?.filename && deletePublicFile(req.file.filename);
+        return res.status(400).send('L\'immagine è mancante o il tipo di file non è supportato');
+    }
+
+    // Creo lo slug del Post
+    const slug = createSlug(title);
+
+    // Creo l'oggetto del nuovo Post
+    const newPost = {
+        title,
+        content,
+        tags,
+        image: req.file.filename,
+        slug
+    };
+
+    // Aggiorno i posts
+    updatePosts([...posts, newPost]);
+
+    res.send(`Nuovo post ${title} creato con slug ${slug}`);
 };
 
 // Definisco la rotta per il download
