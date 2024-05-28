@@ -11,6 +11,7 @@ const fs = require("fs");
 const slugify = require('slugify');
 
 // Creo una funzione per creare lo slug dei post
+
 // const createSlug = (name) => {
 //     slugify(name, {lower: true, strict: true});
 // }
@@ -32,7 +33,7 @@ const createSlug = (name) => {
 
 // Creo una funzione per l'eliminazione del file da public
 const deletePublicFile = (fileName) => {
-    const filePath = path.join(__dirname, '../public', fileName);
+    const filePath = path.join(__dirname, './public', fileName);
     fs.unlinkSync(filePath);
 }
 

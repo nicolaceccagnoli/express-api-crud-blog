@@ -137,7 +137,7 @@ const create = (req, res) => {
     const newPosts = [...posts, newPost]; 
     updatePosts(newPosts);
     posts = newPosts;
-    
+
     res.format({
         html: () => {
             // Se il nuovo post è stato creato
@@ -162,6 +162,25 @@ const create = (req, res) => {
         }
     })
 };
+
+// Definisco la rotta per eliminare il post
+const destroy = (req, res) => {
+
+    // Estraggo lo slug dalla request del body
+    const { slug } = req.params;
+    // prendo il post da eliminare
+    const postToDelete = posts.find(p => p.slug === slug);
+    if (!postToDelete) {
+        return res.status(404).send(`Non esiste un post con questo slug ${slug}`);
+    }
+
+    // Elimino l'immagine del post
+    deletePublicFile(postToDelete.image);
+    const newPosts = posts.filter(p => p.slug !== postToDelete.slug);
+    updatePosts(newPosts);
+
+    res.send(`Post con slug ${slug} eliminato con successo.`);
+}
 
 // Definisco la rotta per il download
 const download = (req, res) => {
@@ -200,5 +219,6 @@ module.exports = {
     index, 
     show,
     create,
-    download
+    download,
+    destroy
 }

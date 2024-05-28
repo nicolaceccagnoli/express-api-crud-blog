@@ -16,5 +16,7 @@ router.get('/:slug', postsController.show);
 
 router.get('/:slug/download', postsController.download);
 
+router.delete('/:slug', postsController.destroy);
+
 
 module.exports = router
